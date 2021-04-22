@@ -39,29 +39,32 @@
         </div>
     @endif
 
-    <table class="table table-bordered">
+    <table width="700px" class="table table-bordered" >
         <tr>
             <th>Nim</th>
             <th>Nama</th>
+            <th>Image</th>
             <th>Kelas</th>
             <th>Jurusan</th>
             <th>No_Handphone</th>
             <th>E-mail</th>
-            <th>Tanggal Lahir</th>
-            <th width="900px">Action</th>
+            <th width="100px">Tanggal Lahir</th>
+            <th style="width:700%;">Action</th>
         </tr>
     @foreach ($mahasiswas as $Mahasiswa)
     <tr>
         <td>{{ $Mahasiswa->Nim }}</td>
         <td>{{ $Mahasiswa->Nama }}</td>
+        <td> <img width="100px" src="{{asset('storage/'.$Mahasiswa->featured_image)}}"> </td>
         <td>{{ $Mahasiswa->Kelas->nama_kelas  }}</td>
         <td>{{ $Mahasiswa->Jurusan }}</td>
         <td>{{ $Mahasiswa->No_Handphone }}</td>
         <td>{{ $Mahasiswa->Email }}</td>
         <td>{{ $Mahasiswa->TanggalLahir }}</td>
-        <td width="900px">
+        <td>
             <form action="{{ route('mahasiswas.destroy',$Mahasiswa->Nim) }}" method="POST">
                 <a class="btn btn-info" href="{{ route('mahasiswas.show',$Mahasiswa->Nim) }}">Show</a>
+                <br><br>
                 <a class="btn btn-primary" href="{{ route('mahasiswas.edit',$Mahasiswa->Nim) }}">Edit</a>
                 @csrf
                 @method('DELETE')

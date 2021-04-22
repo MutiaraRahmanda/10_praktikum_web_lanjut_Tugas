@@ -6,7 +6,7 @@ use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use App\Models\Kelas;
 use App\Models\Mahasiswa_MataKuliah;
-
+use Illuminate\Support\Facades\Storage;
 
 class MahasiswaController extends Controller
 {
@@ -57,6 +57,7 @@ class MahasiswaController extends Controller
                 'No_Handphone' => 'required',
                 'Email' => 'required',
                 'TanggalLahir' => 'required',
+                'image' => 'required',
                 ]);
                 //fungsi eloquent untuk menambah data
                 $mahasiswa = new Mahasiswa;
@@ -67,6 +68,11 @@ class MahasiswaController extends Controller
                 $mahasiswa->no_handphone = $request->get('No_Handphone');
                 $mahasiswa->email = $request->get('Email');
                 $mahasiswa->tanggalLahir = $request->get('TanggalLahir');
+                if ($request->file('image')) {
+                    $image_name = $request->file('image')->store('images', 'public');
+                }
+
+                $mahasiswa->featured_image = $image_name;
                 $mahasiswa->save();
 
                 $kelas = new Kelas;
@@ -128,6 +134,7 @@ class MahasiswaController extends Controller
             'No_Handphone' => 'required',
             'Email' => 'required',
             'TanggalLahir' => 'required',
+
             ]);
 
         $mahasiswa = Mahasiswa::with('kelas')->where('Nim' , $Nim)->first();
@@ -138,6 +145,16 @@ class MahasiswaController extends Controller
         $mahasiswa->no_handphone = $request->get('No_Handphone');
         $mahasiswa->email = $request->get('Email');
         $mahasiswa->tanggalLahir = $request->get('TanggalLahir');
+        if ($request->file('image') != null && $mahasiswa->featured_image && file_exists(storage_path('app/public/' . $mahasiswa->featured_image))) {
+            Storage::delete(['public/'. $mahasiswa->featured_image]);
+            $image_name = $request->file('image')->store('image', 'public');
+        } elseif ($request->file('image') != null) {
+            $image_name = $request->file('image')->store('image', 'public');
+        }
+        else {
+            $image_name = $mahasiswa->featured_image;
+        }
+        $mahasiswa->featured_image = $image_name;
         $mahasiswa->save();
 
         $kelas = new Kelas;

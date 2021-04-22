@@ -23,6 +23,7 @@ class Mahasiswa extends Model //Definisi Model
     'No_Handphone',
     'Email',
     'TanggalLahir',
+    'featured_image',
     ];
 
     public function kelas(){
